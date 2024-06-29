@@ -1,0 +1,1 @@
+"the input number is 0"
