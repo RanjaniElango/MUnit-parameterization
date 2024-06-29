@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="munit-parameterization-test-suite.xml" >
+		<munit:parameterizations >
+			<munit:parameterization name="even testFlow" >
+				<munit:parameters >
+					<munit:parameter propertyName="inputRequest" value='#[output application/json --- readUrl("classpath://sample_data/even-number-request.dwl")]' />
+					<munit:parameter propertyName="outputResponse" value='#[ readUrl("classpath://sample_data/even-number-response.dwl")]' />
+				</munit:parameters>
+			</munit:parameterization>
+			<munit:parameterization name="odd testFlow" >
+				<munit:parameters >
+					<munit:parameter propertyName="inputRequest" value='#[output application/json --- readUrl("classpath://sample_data/odd-number-request.dwl")]' />
+					<munit:parameter propertyName="outputResponse" value='#[ readUrl("classpath://sample_data/odd-number-response.dwl")]' />
+				</munit:parameters>
+			</munit:parameterization>
+			<munit:parameterization name="zero testFlow" >
+				<munit:parameters >
+					<munit:parameter propertyName="inputRequest" value='#[output application/json --- readUrl("classpath://sample_data/zero-request.dwl")]' />
+					<munit:parameter propertyName="outputResponse" value='#[ readUrl("classpath://sample_data/zero-response.dwl")]' />
+				</munit:parameters>
+			</munit:parameterization>
+		</munit:parameterizations>
+	</munit:config>
+	<munit:test name="munit-parameterization-testFlow" doc:id="225f4748-4bef-4328-ad9a-77fd69582ec2" description="Test">
+		<munit:behavior >
+			<munit:set-event doc:name="Set input payload" doc:id="4045a801-f169-4c4a-b010-dbc920c65e87" >
+				<munit:payload value="${inputRequest}" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to munit-parameterizationFlow" doc:id="7e3a9a59-3505-4408-a9ed-9f18bb01582e" name="munit-parameterizationFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert output response" doc:id="09ec0519-ae93-498a-b28e-dff2ff5d6b12" actual="#[payload.response]" expected="${outputResponse}"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

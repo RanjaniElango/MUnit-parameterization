@@ -1,0 +1,1 @@
+"the input number 12 is an even number"

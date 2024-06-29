@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="6f49e50f-5a87-4638-911e-ddc141159d2d" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="munit-parameterizationFlow" doc:id="0c523ef0-e284-47d1-9136-dc16141b5bff" >
+		<http:listener doc:name="Listener" doc:id="9e40da96-d297-4c47-b477-8368a1dec7c5" config-ref="HTTP_Listener_config" path="/munit-param"/>
+		<logger level="INFO" doc:name="input payload" doc:id="353cbf04-aec3-467e-8e98-ac1aeff42d9d" message="the input payload is #[payload]"/>
+		<choice doc:name="check odd or even?" doc:id="8793b001-dbdc-4982-9031-4c4f82ce86c6" >
+			<when expression="#[(payload.inputNumber ) == 0]">
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;"response": "the input number is 0"&#10;&#10;}]' doc:name="Number is 0" doc:id="94a91540-e3ab-436f-96d5-8fdfb560efc5" />
+			</when>
+			<when expression="#[(payload.inputNumber mod 2 ) == 0]">
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;"response": "the input number " ++  payload.inputNumber ++ " is an even number"&#10;&#10;}]' doc:name="Even number" doc:id="ce170859-1ec2-4da0-b961-2da18dd9857e" />
+			</when>
+			<otherwise >
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;"response": "the input number " ++  payload.inputNumber ++ " is an odd number"&#10;&#10;}]' doc:name="Odd Number" doc:id="1cc3ee35-32bc-4227-a5b4-848641a033ca" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="response payload" doc:id="60929898-a362-4acd-b2f8-4feed26894f2" message="#[payload]" />
+	</flow>
+</mule>

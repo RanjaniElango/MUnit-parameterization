@@ -1,0 +1,1 @@
+"the input number 7 is an odd number"
